@@ -1,0 +1,89 @@
+<canvas width=1200 height = 600></canvas>
+<audio>
+<source src="hit.wav"></source>
+</audio>
+
+<script>
+
+clr = "#ffffff"
+xx=-100
+yy=-100
+
+hit = document.getElementsByTagName("audio")[0]
+
+document.onkeydown = function(letter){
+  if(letter.key == "o"){
+    clr = prompt("Type in colour")
+  }
+
+  if(letter.key == "c"){
+    Objects = []
+  }
+}
+
+document.onmousemove = function(pos){
+  xx = pos.clientX
+  yy = pos.clientY
+  can.requestFullscreen()
+}
+
+document.onmousedown = function(){
+  Objects.push(new Block(xx,yy,clr))
+}
+
+can = document.getElementsByTagName("canvas")[0]
+c = can.getContext("2d")
+can.width = outerWidth
+can.height = outerHeight
+can.style.cursor="none"
+function Block(x,y,colour){
+  this.blockedLeft = false
+  this.blockedRight = false
+  this.blockedTop = false
+  this.blockedBottom = false
+  this.display = function(){
+    this.colour = colour
+
+      if(y>can.height-2.5 && this.blockedBottom == false){
+        this.blockedBottom = true
+        hit.currentTime=0
+        hit.play()
+
+      }
+
+
+            if((y<can.height-2.5 && this.blockedBottom == false)){
+              this.blockedBottom = false
+
+            }
+
+
+    c.fillStyle = colour
+    c.fillRect(x-2.5,y-2.5,5,5)
+    if(!(this.blockedBottom)){
+      y++
+    }
+  }
+}
+
+
+
+Objects = []
+
+function Animate(){
+
+
+c.fillStyle = "#000000"
+c.fillRect(0,0,can.width,can.height)
+
+for(n=Objects.length-1;n>-1;n--){
+ Objects[n].display()
+}
+c.fillStyle="#ffffff"
+c.beginPath()
+c.arc(xx,yy,10,0,99)
+c.fill()
+}
+
+setInterval(Animate,1)
+</script>
